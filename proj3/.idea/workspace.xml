@@ -64,7 +64,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="723" />
     <option name="y" value="2" />
     <option name="width" value="1077" />
@@ -76,7 +76,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -99,30 +98,6 @@
               <item name="proj3" type="b2602c69:ProjectViewProjectNode" />
               <item name="proj3" type="462c0819:PsiDirectoryNode" />
               <item name="byow" type="462c0819:PsiDirectoryNode" />
-              <item name="InputDemo" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="proj3" type="b2602c69:ProjectViewProjectNode" />
-              <item name="proj3" type="462c0819:PsiDirectoryNode" />
-              <item name="byow" type="462c0819:PsiDirectoryNode" />
-              <item name="lab12" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="proj3" type="b2602c69:ProjectViewProjectNode" />
-              <item name="proj3" type="462c0819:PsiDirectoryNode" />
-              <item name="byow" type="462c0819:PsiDirectoryNode" />
-              <item name="lab13" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="proj3" type="b2602c69:ProjectViewProjectNode" />
-              <item name="proj3" type="462c0819:PsiDirectoryNode" />
-              <item name="byow" type="462c0819:PsiDirectoryNode" />
-              <item name="SaveDemo" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="proj3" type="b2602c69:ProjectViewProjectNode" />
-              <item name="proj3" type="462c0819:PsiDirectoryNode" />
-              <item name="byow" type="462c0819:PsiDirectoryNode" />
               <item name="TileEngine" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -130,6 +105,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -185,7 +161,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10021322" />
@@ -372,13 +348,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/byow/Core/RandomUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="36" lean-forward="true" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/byow/Core/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
@@ -393,10 +362,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/byow/Core/RandomUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/byow/Core/Engine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        <state relative-caret-position="529">
+          <caret line="23" column="37" lean-forward="true" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
