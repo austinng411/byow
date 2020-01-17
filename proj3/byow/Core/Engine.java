@@ -1,6 +1,7 @@
 package byow.Core;
 
 import byow.TileEngine.*;
+import byow.TextEngine.*;
 import edu.princeton.cs.algs4.*;
 import edu.princeton.cs.introcs.StdDraw;
 
@@ -39,6 +40,9 @@ public class Engine {
     private static final int MAX_ROOM_HEIGHT = 8;
     private static final int DEAD_END = 5;
 
+    private static final Font monaco30 = new Font("Monaco", Font.BOLD, 30);
+    private static final Font monaco15 = new Font("Monaco", Font.BOLD, 30);
+
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
@@ -49,6 +53,7 @@ public class Engine {
         // should only need to draw a new frame once all the possible moves
         // in a single frame have already occurred
 
+        setWindow();
         String game_seed = seedPrompt();
         TETile[][] finalWorldFrame = interactWithInputString(game_seed);
         avatar = placeAvatar(finalWorldFrame);
@@ -64,8 +69,63 @@ public class Engine {
         return spawn;
     }
 
+    // INTERFACE //
+
+    private void setWindow() {
+        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
+        StdDraw.setXscale(0, WIDTH);
+        StdDraw.setYscale(0, HEIGHT);
+        StdDraw.clear(Color.BLACK);
+        StdDraw.enableDoubleBuffering();
+    }
+
+    private void darkWindow() {
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+    }
+
+    private String displayTextInput(TextScreen text) {
+        // for now this supports displaying a single prompt and showing a single input
+        // can probably make something like tileset which is just a bunch of class methods that has
+        // premade text screens i.e. a seed screen and character name screen.
+
+        darkWindow();
+        StdDraw.setFont(monaco15);
+        String input = "";
+        text.screen(); // how about a space to continue transition screen ?
+        StdDraw.show();
+        while (true) {
+            if (StdDraw.hasNextKeyTyped()) {
+                char in = StdDraw.nextKeyTyped();
+                if (in == ';') { return input; }
+                input  = input + in;
+                StdDraw.clear(Color.BLACK);
+                text.screen();
+                double[] c = text.getCoords();
+                StdDraw.text(c[0], c[1], input);
+                StdDraw.show();
+            }
+        }
+    }
+
     private String seedPrompt() {
-        return "12345";
+        return displayTextInput(new Seed(WIDTH, HEIGHT));
+    }
+
+    private void seedFrame() {
+        //StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
+        //StdDraw.setXscale(0, WIDTH);
+        //StdDraw.setYscale(0, HEIGHT);
+        StdDraw.clear(Color.BLACK);
+        //StdDraw.enableDoubleBuffering();
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+        Font font = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setFont(font);
+        StdDraw.text(WIDTH / 2.0, HEIGHT / 2.0, "Please enter a seed: ");
+        Font font2 = new Font("Monaco", Font.BOLD, 15);
+        StdDraw.show();
+        StdDraw.pause(1000);
     }
 
     // MOVEMENT //
@@ -107,7 +167,6 @@ public class Engine {
             }
             //StdDraw.pause(0);
             ter.renderFrame(t);
-
         }
     }
 
