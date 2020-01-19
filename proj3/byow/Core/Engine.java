@@ -30,6 +30,8 @@ public class Engine {
     TERenderer ter = new TERenderer();
     Random seed;
     private Position avatar;
+    private Position door;
+    private TETile feet;
     private List<Position> spawns = new ArrayList<>();
     // private MinPQ<Room> rooms = new MinPQ<>(new RoomCompare());
     /* Feel free to change the width and height. */
@@ -57,16 +59,26 @@ public class Engine {
         String game_seed = seedPrompt();
         TETile[][] finalWorldFrame = interactWithInputString(game_seed);
         avatar = placeAvatar(finalWorldFrame);
+        door = placeDoor(finalWorldFrame);
 
         ter.initialize(WIDTH, HEIGHT+5);
         ter.renderFrame(finalWorldFrame);
         move(finalWorldFrame);
     }
 
-    private Position placeAvatar(TETile[][] t) {
+    private Position place(TETile[][] t, TETile tile) {
         Position spawn = spawns.get(seed.nextInt(spawns.size()));
-        t[spawn.x][spawn.y] = Tileset.AVATAR;
+        spawns.remove(spawn);
+        t[spawn.x][spawn.y] = tile;
         return spawn;
+    }
+
+    private Position placeAvatar(TETile[][] t) {
+        feet = Tileset.FLOOR;
+        return place(t, Tileset.AVATAR);
+    }
+    private Position placeDoor(TETile[][] t) {
+        return place(t, Tileset.UNLOCKED_DOOR);
     }
 
     // INTERFACE //
@@ -109,24 +121,11 @@ public class Engine {
     }
 
     private String seedPrompt() {
-        return displayTextInput(new Seed(WIDTH, HEIGHT));
+        String s =  displayTextInput(new Seed(WIDTH, HEIGHT));
+        if (s.length() > 0) { return s; }
+        return "0";
     }
 
-    private void seedFrame() {
-        //StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
-        //StdDraw.setXscale(0, WIDTH);
-        //StdDraw.setYscale(0, HEIGHT);
-        StdDraw.clear(Color.BLACK);
-        //StdDraw.enableDoubleBuffering();
-        StdDraw.clear(Color.BLACK);
-        StdDraw.setPenColor(Color.WHITE);
-        Font font = new Font("Monaco", Font.BOLD, 30);
-        StdDraw.setFont(font);
-        StdDraw.text(WIDTH / 2.0, HEIGHT / 2.0, "Please enter a seed: ");
-        Font font2 = new Font("Monaco", Font.BOLD, 15);
-        StdDraw.show();
-        StdDraw.pause(1000);
-    }
 
     // MOVEMENT //
     private void move(TETile[][] t) {
@@ -172,9 +171,11 @@ public class Engine {
 
     private Position up(TETile[][] t, Position p) {
         if (p.y + 1 < HEIGHT) {
-            if (t[p.x][p.y + 1].equals(Tileset.FLOOR)) {
+            TETile dest = t[p.x][p.y + 1];
+            if (dest.canSwap()) {
                 t[p.x][p.y + 1] = Tileset.AVATAR;
-                t[p.x][p.y] = Tileset.FLOOR;
+                t[p.x][p.y] = feet;
+                feet = dest;
                 return new Position(p.x, p.y + 1);
             }
         }
@@ -182,9 +183,11 @@ public class Engine {
     }
     private Position down(TETile[][] t, Position p) {
         if (p.y - 1 >= 0) {
-            if (t[p.x][p.y - 1].equals(Tileset.FLOOR)) {
+            TETile dest = t[p.x][p.y - 1];
+            if (dest.canSwap()) {
                 t[p.x][p.y - 1] = Tileset.AVATAR;
-                t[p.x][p.y] = Tileset.FLOOR;
+                t[p.x][p.y] = feet;
+                feet = dest;
                 return new Position(p.x, p.y - 1);
             }
         }
@@ -192,9 +195,11 @@ public class Engine {
     }
     private Position left(TETile[][] t, Position p) {
         if (p.x - 1 >= 0) {
-            if (t[p.x - 1][p.y].equals(Tileset.FLOOR)) {
+            TETile dest = t[p.x - 1][p.y];
+            if (dest.canSwap()) {
                 t[p.x - 1][p.y] = Tileset.AVATAR;
-                t[p.x][p.y] = Tileset.FLOOR;
+                t[p.x][p.y] = feet;
+                feet = dest;
                 return new Position(p.x - 1, p.y);
             }
         }
@@ -202,9 +207,11 @@ public class Engine {
     }
     private Position right(TETile[][]t, Position p) {
         if (p.x + 1 < WIDTH) {
-            if (t[p.x + 1][p.y].equals(Tileset.FLOOR)) {
+            TETile dest = t[p.x + 1][p.y];
+            if (dest.canSwap()) {
                 t[p.x + 1][p.y] = Tileset.AVATAR;
-                t[p.x][p.y] = Tileset.FLOOR;
+                t[p.x][p.y] = feet;
+                feet = dest;
                 return new Position(p.x + 1, p.y);
             }
         }

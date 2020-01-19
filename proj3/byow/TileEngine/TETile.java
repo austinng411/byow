@@ -30,8 +30,10 @@ public class TETile {
     private final char character; // Do not rename character or the autograder will break.
     private final Color textColor;
     private final Color backgroundColor;
+    private final boolean swappable;
     private final String description;
     private final String filepath;
+
 
     /**
      * Full constructor for TETile objects.
@@ -41,11 +43,12 @@ public class TETile {
      * @param description The description of the tile, shown in the GUI on hovering over the tile.
      * @param filepath Full path to image to be used for this tile. Must be correct size (16x16)
      */
-    public TETile(char character, Color textColor, Color backgroundColor, String description,
+    public TETile(char character, Color textColor, Color backgroundColor, boolean swappable, String description,
                   String filepath) {
         this.character = character;
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;
+        this.swappable = swappable;
         this.description = description;
         this.filepath = filepath;
     }
@@ -62,6 +65,16 @@ public class TETile {
         this.character = character;
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;
+        this.swappable = false;
+        this.description = description;
+        this.filepath = null;
+    }
+
+    public TETile(char character, Color textColor, Color backgroundColor, boolean swappable, String description) {
+        this.character = character;
+        this.textColor = textColor;
+        this.backgroundColor = backgroundColor;
+        this.swappable = swappable;
         this.description = description;
         this.filepath = null;
     }
@@ -72,7 +85,7 @@ public class TETile {
      * @param textColor foreground color for tile copy
      */
     public TETile(TETile t, Color textColor) {
-        this(t.character, textColor, t.backgroundColor, t.description, t.filepath);
+        this(t.character, textColor, t.backgroundColor, t.swappable, t.description, t.filepath);
     }
 
 
@@ -118,6 +131,8 @@ public class TETile {
     public String description() {
         return description;
     }
+
+    public boolean canSwap() { return swappable; }
 
     /**
      * Creates a copy of the given tile with a slightly different text color. The new
