@@ -33,7 +33,7 @@ public class Engine {
     private Position door;
     private TETile feet;
     private int floorNum;
-    private List<Position> spawns = new ArrayList<>();
+    private List<Position> spawns;
     // private MinPQ<Room> rooms = new MinPQ<>(new RoomCompare());
     /* Feel free to change the width and height. */
     private static final int WIDTH = 80;
@@ -42,7 +42,7 @@ public class Engine {
     private static final int MAX_ROOM_WIDTH = 4;
     private static final int MAX_ROOM_HEIGHT = 8;
     private static final int DEAD_END = 5;
-    private static final int FLOORS = 10;
+    private static final int FLOORS = 1;
 
     private static final Font monaco30 = new Font("Monaco", Font.BOLD, 30);
     private static final Font monaco15 = new Font("Monaco", Font.BOLD, 30);
@@ -70,22 +70,18 @@ public class Engine {
         //ter.renderFrame(finalWorldFrame);
         //move(finalWorldFrame);
         floorNum = FLOORS;
-        runWorld(FLOORS).screen();
+        TextScreen end = runWorld(FLOORS);
+        setWindow();
+        end.screen();
+        StdDraw.show();s
     }
 
     private TextScreen runWorld(int floor) {
-        if (floor < 0) { return new Exit(WIDTH, HEIGHT); }
+        if (floor == 0) { return new Exit(WIDTH, HEIGHT); }
         TETile[][] worldFrame = createMap(new TETile[WIDTH][HEIGHT]);
         move(worldFrame);
         floorNum = floor - 1;
         return runWorld(floor - 1);
-    }
-
-    private Position place(TETile[][] t, TETile tile) {
-        Position spawn = spawns.get(seed.nextInt(spawns.size()));
-        spawns.remove(spawn);
-        t[spawn.x][spawn.y] = tile;
-        return spawn;
     }
 
     // INTERFACE //
@@ -289,6 +285,13 @@ public class Engine {
         return place(t, Tileset.UNLOCKED_DOOR);
     }
 
+    private Position place(TETile[][] t, TETile tile) {
+        Position spawn = spawns.get(seed.nextInt(spawns.size()));
+        spawns.remove(spawn);
+        t[spawn.x][spawn.y] = tile;
+        return spawn;
+    }
+
     //////////////////////////////////////////////////////////
 
     private void initializeTiles(TETile[][] t) {
@@ -311,6 +314,7 @@ public class Engine {
 
     private void fillRooms(TETile[][] t, MinPQ<Position> r) {
         MacroGrid sections = new MacroGrid(t, SECTION_SIZE);
+        spawns = new ArrayList<>();
         for (int i = 0; i < sections.xSections; i++) {
             for (int j = 0; j < sections.ySections; j++) {
                 if (!sections.isFilled(i, j)) {
