@@ -32,6 +32,7 @@ public class Engine {
     private Position avatar;
     private Position door;
     private TETile feet;
+    private int floorNum;
     private List<Position> spawns = new ArrayList<>();
     // private MinPQ<Room> rooms = new MinPQ<>(new RoomCompare());
     /* Feel free to change the width and height. */
@@ -41,6 +42,7 @@ public class Engine {
     private static final int MAX_ROOM_WIDTH = 4;
     private static final int MAX_ROOM_HEIGHT = 8;
     private static final int DEAD_END = 5;
+    private static final int FLOORS = 10;
 
     private static final Font monaco30 = new Font("Monaco", Font.BOLD, 30);
     private static final Font monaco15 = new Font("Monaco", Font.BOLD, 30);
@@ -55,15 +57,28 @@ public class Engine {
         // should only need to draw a new frame once all the possible moves
         // in a single frame have already occurred
 
-        setWindow();
-        String game_seed = seedPrompt();
-        TETile[][] finalWorldFrame = interactWithInputString(game_seed);
-        avatar = placeAvatar(finalWorldFrame);
-        door = placeDoor(finalWorldFrame);
+        //setWindow();
+        //String game_seed = seedPrompt();
+        //TETile[][] finalWorldFrame = interactWithInputString(game_seed);
+        //TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
 
+        seed = initializeRNG(seedPrompt());
         ter.initialize(WIDTH, HEIGHT+5);
-        ter.renderFrame(finalWorldFrame);
-        move(finalWorldFrame);
+        //return createMap(finalWorldFrame);
+
+        //ter.initialize(WIDTH, HEIGHT+5);
+        //ter.renderFrame(finalWorldFrame);
+        //move(finalWorldFrame);
+        floorNum = FLOORS;
+        runWorld(FLOORS).screen();
+    }
+
+    private TextScreen runWorld(int floor) {
+        if (floor < 0) { return new Exit(WIDTH, HEIGHT); }
+        TETile[][] worldFrame = createMap(new TETile[WIDTH][HEIGHT]);
+        move(worldFrame);
+        floorNum = floor - 1;
+        return runWorld(floor - 1);
     }
 
     private Position place(TETile[][] t, TETile tile) {
@@ -73,14 +88,6 @@ public class Engine {
         return spawn;
     }
 
-    private Position placeAvatar(TETile[][] t) {
-        feet = Tileset.FLOOR;
-        return place(t, Tileset.AVATAR);
-    }
-    private Position placeDoor(TETile[][] t) {
-        return place(t, Tileset.UNLOCKED_DOOR);
-    }
-
     // INTERFACE //
 
     private void setWindow() {
@@ -88,6 +95,7 @@ public class Engine {
         StdDraw.setXscale(0, WIDTH);
         StdDraw.setYscale(0, HEIGHT);
         StdDraw.clear(Color.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
         StdDraw.enableDoubleBuffering();
     }
 
@@ -101,7 +109,7 @@ public class Engine {
         // can probably make something like tileset which is just a bunch of class methods that has
         // premade text screens i.e. a seed screen and character name screen.
 
-        darkWindow();
+        setWindow();
         StdDraw.setFont(monaco15);
         String input = "";
         text.screen(); // how about a space to continue transition screen ?
@@ -133,6 +141,7 @@ public class Engine {
         while (true) {
             StdDraw.setPenColor(Color.WHITE);
             StdDraw.text(40, 34, avatar.x + ", " + avatar.y);
+            StdDraw.text(79, 34, "" + floorNum);
             StdDraw.show();
             if (StdDraw.hasNextKeyTyped()) {
                 c = StdDraw.nextKeyTyped();
@@ -140,8 +149,6 @@ public class Engine {
                 boolean a = (c == 'a' || c == 'A');
                 boolean s = (c == 's' || c == 'S');
                 boolean d = (c == 'd' || c == 'D');
-                boolean p = (c == 't' || c == 'T');
-                boolean un = (c == 'u' || c == 'U');
                 if (w) {
                     Position next = up(t, avatar);
                     if (!next.equals(avatar)) {
@@ -166,6 +173,7 @@ public class Engine {
             }
             //StdDraw.pause(0);
             ter.renderFrame(t);
+            if (avatar.equals(door)) { break; }
         }
     }
 
@@ -253,10 +261,7 @@ public class Engine {
 
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
         seed = initializeRNG(input);
-        //createMap(finalWorldFrame);
-        //ter.initialize(WIDTH, HEIGHT+5);
-        //ter.renderFrame(finalWorldFrame);
-        //return finalWorldFrame;
+
         return createMap(finalWorldFrame);
     }
 
@@ -271,7 +276,17 @@ public class Engine {
         initializeTiles(frame);
         floorPlan(frame);
         addWalls(frame);
+        avatar = placeAvatar(frame);
+        door = placeDoor(frame);
         return frame;
+    }
+
+    private Position placeAvatar(TETile[][] t) {
+        feet = Tileset.FLOOR;
+        return place(t, Tileset.AVATAR);
+    }
+    private Position placeDoor(TETile[][] t) {
+        return place(t, Tileset.UNLOCKED_DOOR);
     }
 
     //////////////////////////////////////////////////////////
